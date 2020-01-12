@@ -1,12 +1,10 @@
-package frc.team0000.robot
+package com.grebneerg.tobor
 
 import com.revrobotics.ColorMatch
 import com.revrobotics.ColorSensorV3
 import edu.wpi.first.wpilibj.I2C
-import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import edu.wpi.first.wpilibj2.command.button.JoystickButton
 
 class Robot : TimedRobot() {
     val colorSensorPort = I2C.Port.kOnboard
@@ -19,9 +17,9 @@ class Robot : TimedRobot() {
     val GREEN = ColorMatch.makeColor(0.0, 0.5, 0.0)
     val YELLOW = ColorMatch.makeColor(0.5, 0.5, 0.0)
 
-    val stick = Joystick(0)
+    val drivetrain = Drivetrain()
 
-    val xBtn = JoystickButton(stick, 0)
+    val gamepad = LogitechF310(0)
 
     override fun robotInit() {
         println("Hello World from Kotlin!")
@@ -51,5 +49,15 @@ class Robot : TimedRobot() {
             else -> "Unknown"
         })
         SmartDashboard.putNumber("Match confidence", match.confidence)
+
+//        println("beep")
+    }
+
+    override fun teleopInit() {
+        drivetrain.setSpeedsPercent(0.0, 0.0)
+    }
+
+    override fun teleopPeriodic() {
+        drivetrain.setSpeedsPercent(gamepad.leftStickY, gamepad.rightStickY)
     }
 }
